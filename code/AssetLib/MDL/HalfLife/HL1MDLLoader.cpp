@@ -981,11 +981,24 @@ void HL1MDLLoader::read_animations() {
 
     int highest_num_blend_animations = SequenceBlendMode_HL1::NoBlend;
 
-    // Count the total number of animations.
+    // Count the total number of animations. Reject malformed sequence
+    // descriptions: a negative blend count would shrink the allocated
+    // mAnimations array while the loop below still writes one entry per
+    // blend (heap-buffer-overflow), and an out-of-range sequence group
+    // index would later index anim_headers_ out of bounds.
+    size_t num_animations = 0;
     for (int i = 0; i < header_->numseq; ++i, ++pseqdesc) {
-        scene_->mNumAnimations += pseqdesc->numblends;
+        if (pseqdesc->numblends < 0 || pseqdesc->seqgroup < 0 ||
+                pseqdesc->seqgroup >= std::max(header_->numseqgroups, 1)) {
+            throw DeadlyImportError(MDL_HALFLIFE_LOG_HEADER "Invalid sequence description");
+        }
+        num_animations += static_cast<size_t>(pseqdesc->numblends);
         highest_num_blend_animations = std::max(pseqdesc->numblends, highest_num_blend_animations);
     }
+    if (num_animations > AI_MDL_HL1_MAX_SEQUENCES * SequenceBlendMode_HL1::FourWayBlending) {
+        throw DeadlyImportError(MDL_HALFLIFE_LOG_HEADER "Too many blend animations");
+    }
+    scene_->mNumAnimations = static_cast<unsigned int>(num_animations);
 
     // Get the number of available blend controllers for global info.
     get_num_blend_controllers(highest_num_blend_animations, num_blend_controllers_);
