@@ -91,9 +91,9 @@ private:
     T value;
 };
 
-using DirectPropertyMap = std::fbx_unordered_map<std::string,std::shared_ptr<Property> >;
-using PropertyMap = std::fbx_unordered_map<std::string,const Property*>;
-using LazyPropertyMap = std::fbx_unordered_map<std::string,const Element*>;
+using DirectPropertyMap = fbx_unordered_map<std::string,std::shared_ptr<Property> >;
+using PropertyMap = fbx_unordered_map<std::string,const Property*>;
+using LazyPropertyMap = fbx_unordered_map<std::string,const Element*>;
 
 /**
  *  Represents a property table as can be found in the newer FBX files (Properties60, Properties70)

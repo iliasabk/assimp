@@ -52,25 +52,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #if _MSC_VER > 1500 || (defined __GNUC__)
 #   define ASSIMP_FBX_USE_UNORDERED_MULTIMAP
 #   else
-#   define fbx_unordered_map map
-#   define fbx_unordered_multimap multimap
-#   define fbx_unordered_set set
-#   define fbx_unordered_multiset multiset
+#   define fbx_unordered_map std::map
+#   define fbx_unordered_multimap std::multimap
+#   define fbx_unordered_set std::set
+#   define fbx_unordered_multiset std::multiset
 #endif
 
 #ifdef ASSIMP_FBX_USE_UNORDERED_MULTIMAP
 #   include <unordered_map>
 #   include <unordered_set>
 #   if defined(_MSC_VER) && _MSC_VER <= 1600
-#       define fbx_unordered_map tr1::unordered_map
-#       define fbx_unordered_multimap tr1::unordered_multimap
-#       define fbx_unordered_set tr1::unordered_set
-#       define fbx_unordered_multiset tr1::unordered_multiset
+#       define fbx_unordered_map std::tr1::unordered_map
+#       define fbx_unordered_multimap std::tr1::unordered_multimap
+#       define fbx_unordered_set std::tr1::unordered_set
+#       define fbx_unordered_multiset std::tr1::unordered_multiset
 #   else
-#       define fbx_unordered_map unordered_map
-#       define fbx_unordered_multimap unordered_multimap
-#       define fbx_unordered_set unordered_set
-#       define fbx_unordered_multiset unordered_multiset
+        // Modern toolchains: real alias templates whose hash is seeded
+        // per process (hash-flooding hardening for file-derived keys).
+#       include "FBXSeededHash.h"
 #   endif
 #endif
 

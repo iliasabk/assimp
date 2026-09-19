@@ -604,8 +604,8 @@ private:
     float alpha;
 };
 
-using TextureMap = std::fbx_unordered_map<std::string, const Texture*>;
-using LayeredTextureMap = std::fbx_unordered_map<std::string, const LayeredTexture*>;
+using TextureMap = fbx_unordered_map<std::string, const Texture*>;
+using LayeredTextureMap = fbx_unordered_map<std::string, const LayeredTexture*>;
 
 /** DOM class for generic FBX videos */
 class Video final : public Object {
@@ -1014,9 +1014,9 @@ public:
 // during their entire lifetime (Document). FBX files have
 // up to many thousands of objects (most of which we never use),
 // so the memory overhead for them should be kept at a minimum.
-using ObjectMap = std::fbx_unordered_map<uint64_t, LazyObject*> ;
-using PropertyTemplateMap = std::fbx_unordered_map<std::string, std::shared_ptr<const PropertyTable> > ;
-using ConnectionMap = std::fbx_unordered_multimap<uint64_t, const Connection*>;
+using ObjectMap = fbx_unordered_map<uint64_t, LazyObject*> ;
+using PropertyTemplateMap = fbx_unordered_map<std::string, std::shared_ptr<const PropertyTable> > ;
+using ConnectionMap = fbx_unordered_multimap<uint64_t, const Connection*>;
 
 /** DOM class for global document settings, a single instance per document can
  *  be accessed via Document.Globals(). */
