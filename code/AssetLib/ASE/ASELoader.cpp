@@ -189,7 +189,11 @@ void ASEImporter::InternReadFile(const std::string &pFile,
         aiMesh **pp = pScene->mMeshes = new aiMesh *[pScene->mNumMeshes];
         for (std::vector<aiMesh *>::const_iterator i = avOutMeshes.begin(); i != avOutMeshes.end(); ++i) {
             if (!(*i)->mNumFaces) {
+                // mColors[2] and mColors[3] don't point to real vertex color
+                // data, they are used to temporarily store the source mesh
+                // pointer resp. the material index.
                 (*i)->mColors[2] = nullptr;
+                (*i)->mColors[3] = nullptr;
                 delete *i;
                 continue;
             }

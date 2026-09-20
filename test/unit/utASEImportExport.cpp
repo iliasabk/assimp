@@ -181,3 +181,19 @@ TEST_F(utASEImportExport, importInvalidUVIndex) {
 
     EXPECT_EQ(nullptr, scene);
 }
+
+
+TEST_F(utASEImportExport, importEmptyGeomObject) {
+    // Regression test for oss-fuzz issue 524387782: a GEOMOBJECT without any
+    // faces is dropped as a dummy. Its temporary material-index tag stored in
+    // mColors[3] must be cleared before the aiMesh is deleted, otherwise
+    // aiMesh::~aiMesh runs delete[] on a non-owned address.
+    ::Assimp::Importer importer;
+    const aiScene *scene = importer.ReadFile(ASSIMP_TEST_MODELS_DIR "/ASE/EmptyGeomObject.ase", aiProcess_ValidateDataStructure);
+
+    ASSERT_NE(nullptr, scene);
+    ASSERT_EQ(1u, scene->mNumMeshes);
+    EXPECT_EQ(3u, scene->mMeshes[0]->mNumVertices);
+    EXPECT_EQ(1u, scene->mMeshes[0]->mNumFaces);
+    EXPECT_EQ(0u, scene->mMeshes[0]->mMaterialIndex);
+}
